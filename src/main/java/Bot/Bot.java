@@ -29,25 +29,8 @@ public class Bot {
                 break;
             case 1:
                 initBot();
-                webDriver.get("http://mammatilmichelle.blogg.no/");
-                WebElement link;
-                //link = webDriver.findElement(By.partialLinkText("http://mammatilmichelle.blogg.no/1501318808_dette_er_vre_nye_navn.html"));
-                link = webDriver.findElement(By.className("title"));
-                link.click();
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                takeScreenshot();
-
-                //WebElement seaBox;
-
-
-                //seaBox = driver.findElement(By.id("searchInput"));
-                //seaBox.sendKeys("Norge");
-
-
+                webDriver.get("https://app.24sevenoffice.com/login/");
+                loginBot();
                 break;
 
             default:
@@ -55,9 +38,24 @@ public class Bot {
         }
     }
 
+    private void loginBot(){
+        WebElement form;
+        WebElement button;
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        form = webDriver.findElement(By.name("username"));
+        form.sendKeys("Username");
+        form = webDriver.findElement(By.name("password"));
+        form.sendKeys("password");
+        button = webDriver.findElement(By.id("btnLogin"));
+        button.click();
+        takeScreenshot();
+    }
 
     private void initBot() {
-        //TODO Get project path
         System.setProperty("webdriver.chrome.driver", projectPath + "\\chromedriver.exe");
         this.webDriver = new ChromeDriver();
     }
@@ -96,7 +94,7 @@ public class Bot {
         }
     }
 
-    public void openScreenshotfolder() {
+    public void openScreenshotFolder() {
         try {
             Desktop.getDesktop().open(new File(screenshotPhat));
         } catch (IOException e) {

@@ -71,7 +71,7 @@ public class BotController {
     private class ImageListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             consoleOutPut("Go to screenshots");
-            bot.openScreenshotfolder();
+            bot.openScreenshotFolder();
 
         }
     }

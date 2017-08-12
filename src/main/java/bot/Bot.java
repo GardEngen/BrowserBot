@@ -9,6 +9,8 @@ public class Bot {
     private WebDriver webDriver;
     private Config config;
     private BotAction botAction;
+    private WebElement form;
+    private WebElement button;
 
 
     public Bot() {
@@ -24,6 +26,7 @@ public class Bot {
                 this.botAction = new BotAction(webDriver);
                 webDriver.get("https://app.24sevenoffice.com/login/");
                 loginBot();
+                selectCompanyAccount("BagID AS");
                 break;
 
             default:
@@ -38,8 +41,6 @@ public class Bot {
     }
 
     private void loginBot(){
-        WebElement form;
-        WebElement button;
        botAction.sleepBot(2000);
         form = webDriver.findElement(By.name("username"));
         form.sendKeys(config.getValue("username"));
@@ -47,12 +48,20 @@ public class Bot {
         form.sendKeys(config.getValue("password"));
         button = webDriver.findElement(By.id("btnLogin"));
         button.click();
-        botAction.sleepBot(4000);
+
     }
 
-    private void selectCompanyaccount(){
-        //        botAction.sleepBot(5000);
-//        button = webDriver.findElement(By.className("map-name"));
-//        button.click();
+    private void selectCompanyAccount(String company){
+        botAction.sleepBot(6000);
+        button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='ØKONOVA AS']"));
+        botAction.sleepBot(1000);
+        button.click();
+        botAction.sleepBot(2000);
+        form = webDriver.findElement(By.id("textfield-1064-inputEl"));
+        botAction.sleepBot(1000);
+        form.sendKeys(company);
+        botAction.sleepBot(2000);
+        button = webDriver.findElement(By.xpath("//*[contains(text(), '"+company+"')]"));
+        button.click();
     }
 }

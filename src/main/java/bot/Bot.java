@@ -1,30 +1,18 @@
 package bot;
 
 import config.Config;
-import org.apache.commons.io.FileUtils;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import config.SystemInfo;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-
 public class Bot {
     private WebDriver webDriver;
-    private String projectPath;
-    private String screenshotPhat;
-    private boolean isBotRunning;
-    private String os = System.getProperty("os.name").toLowerCase();
     private Config config;
+    private BotAction botAction;
+
 
     public Bot() {
         this.config = new Config();
-        this.projectPath = System.getProperty("user.dir");
-        this.screenshotPhat = projectPath + "\\screenshot\\";
     }
 
     public void startBot(int type) {
@@ -32,10 +20,10 @@ public class Bot {
             case 0:
                 break;
             case 1:
-                initBot();
+                setupWebDriver();
+                this.botAction = new BotAction(webDriver);
                 webDriver.get("https://app.24sevenoffice.com/login/");
                 loginBot();
-                takeScreenshot();
                 break;
 
             default:
@@ -43,109 +31,28 @@ public class Bot {
         }
     }
 
+
+    private void setupWebDriver() {
+        SystemInfo.setChromeDriverPhat();
+        this.webDriver = new ChromeDriver();
+    }
+
     private void loginBot(){
         WebElement form;
         WebElement button;
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+       botAction.sleepBot(2000);
         form = webDriver.findElement(By.name("username"));
         form.sendKeys(config.getValue("username"));
         form = webDriver.findElement(By.name("password"));
         form.sendKeys(config.getValue("password"));
-
         button = webDriver.findElement(By.id("btnLogin"));
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         button.click();
-
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        button = webDriver.findElement(By.className("map-name"));
-        button.click();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        
+        botAction.sleepBot(4000);
     }
 
-    private void initBot() {
-        if(os.contains("mac")){
-            System.setProperty("webdriver.chrome.driver", projectPath + "/chromedriver");
-
-        } else {
-            System.setProperty("webdriver.chrome.driver", projectPath + "\\chromedriver.exe");
-        }
-
-        webDriver = new ChromeDriver();
-    }
-
-    public void takeScreenshot() {
-        String screenshotPhat = projectPath + "\\screenshot\\";
-
-        //Takes screenshot
-        File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
-        System.out.println("Takes screenshot");
-
-        //Checks if directory exists
-        if (new File(screenshotPhat + getCurrentDate()).exists()) {
-            //Stores file
-            System.out.println("directory finness");
-            try {
-                FileUtils.copyFile(scrFile, new File(screenshotPhat + getCurrentDate() + "\\" + getCurrentTime() + ".png"));
-                System.out.println("fil lagres;:" + screenshotPhat + getCurrentDate() + "\\" + getCurrentTime() + ".png");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("directory finness");
-            //make directory
-            new File(projectPath + getCurrentDate()).mkdirs();
-            //Stores file
-            System.out.println("created dir: + " + projectPath + getCurrentDate());
-
-            try {
-                FileUtils.copyFile(scrFile, new File(screenshotPhat + getCurrentDate() + "\\" + getCurrentTime() + ".png"));
-                System.out.println("fil lagres;:" + screenshotPhat + getCurrentDate() + "\\" + getCurrentTime() + ".png");
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void openScreenshotFolder() {
-        try {
-            Desktop.getDesktop().open(new File(screenshotPhat));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private String getCurrentDate() {
-        LocalDate localDate = new LocalDate();
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd.MM.yyyy");
-        return localDate.toString(fmt);
-    }
-
-    private String getCurrentTime() {
-        LocalTime localTime = new LocalTime();
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("HH-mm-ss");
-        return localTime.toString(fmt);
-    }
-
-    public void quitBot() {
-        webDriver.quit();
+    private void selectCompanyaccount(){
+        //        botAction.sleepBot(5000);
+//        button = webDriver.findElement(By.className("map-name"));
+//        button.click();
     }
 }

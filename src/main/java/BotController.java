@@ -71,13 +71,8 @@ public class BotController {
     private class ImageListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             consoleOutPut("Go to screenshots");
-            bot.openScreenshotFolder();
+            //bot.openScreenshotFolder();
 
         }
     }
-//    private class MyWorker extends SwingWorker<String, Void>{
-//        protected String doInBackground() throws Exception {
-//            return null;
-//        }
-//    }
 }

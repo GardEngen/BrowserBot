@@ -17,6 +17,7 @@ public class Bot {
     private String projectPath;
     private String screenshotPhat;
     private boolean isBotRunning;
+    String os = System.getProperty("os.name").toLowerCase();
 
     public Bot() {
         this.projectPath = System.getProperty("user.dir");
@@ -56,8 +57,14 @@ public class Bot {
     }
 
     private void initBot() {
-        System.setProperty("webdriver.chrome.driver", projectPath + "\\chromedriver.exe");
-        this.webDriver = new ChromeDriver();
+        if(os.contains("mac")){
+            System.setProperty("webdriver.chrome.driver", projectPath + "/chromedriver");
+
+        } else {
+            System.setProperty("webdriver.chrome.driver", projectPath + "\\chromedriver.exe");
+        }
+
+        webDriver = new ChromeDriver();
     }
 
     public void takeScreenshot() {

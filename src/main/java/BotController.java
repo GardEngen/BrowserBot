@@ -1,5 +1,5 @@
-import Bot.Bot;
-import Ui.UI;
+import bot.Bot;
+import ui.UI;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

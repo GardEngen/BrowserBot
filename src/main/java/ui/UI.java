@@ -1,4 +1,4 @@
-package Ui;
+package ui;
 
 import javax.swing.*;
 
@@ -16,7 +16,7 @@ public class UI extends JFrame{
     private JPanel mainPanel;
 
     public UI() {
-        setTitle("Bot");
+        setTitle("bot");
         setSize(WIDTH,HEIGHT);
         setContentPane(mainPanel);
     }

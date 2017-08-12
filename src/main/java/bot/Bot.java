@@ -1,5 +1,6 @@
-package Bot;
+package bot;
 
+import config.Config;
 import org.apache.commons.io.FileUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
@@ -17,9 +18,11 @@ public class Bot {
     private String projectPath;
     private String screenshotPhat;
     private boolean isBotRunning;
-    String os = System.getProperty("os.name").toLowerCase();
+    private String os = System.getProperty("os.name").toLowerCase();
+    private Config config;
 
     public Bot() {
+        this.config = new Config();
         this.projectPath = System.getProperty("user.dir");
         this.screenshotPhat = projectPath + "\\screenshot\\";
     }
@@ -48,7 +51,7 @@ public class Bot {
             e.printStackTrace();
         }
         form = webDriver.findElement(By.name("username"));
-        form.sendKeys("Username");
+        form.sendKeys(config.getValue("username"));
         form = webDriver.findElement(By.name("password"));
         form.sendKeys("password");
         button = webDriver.findElement(By.id("btnLogin"));

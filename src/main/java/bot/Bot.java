@@ -35,6 +35,7 @@ public class Bot {
                 initBot();
                 webDriver.get("https://app.24sevenoffice.com/login/");
                 loginBot();
+                takeScreenshot();
                 break;
 
             default:
@@ -53,10 +54,30 @@ public class Bot {
         form = webDriver.findElement(By.name("username"));
         form.sendKeys(config.getValue("username"));
         form = webDriver.findElement(By.name("password"));
-        form.sendKeys("password");
+        form.sendKeys(config.getValue("password"));
+
         button = webDriver.findElement(By.id("btnLogin"));
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         button.click();
-        takeScreenshot();
+
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        button = webDriver.findElement(By.className("map-name"));
+        button.click();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     private void initBot() {

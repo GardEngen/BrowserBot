@@ -35,22 +35,23 @@ public class Storage {
         }
     }
 
-    public void getStoredCompanies() {
+    public List<String> getStoredCompanies() {
         JSONParser parser = new JSONParser();
+        List<String> returnListOfCompanies;
 
         try {
-
             Object obj = parser.parse(new FileReader(SystemInfo.STORAGE_PATH));
-
             JSONObject jsonObject = (JSONObject) obj;
             JSONArray companyList = (JSONArray) jsonObject.get(COMPANY_LIST_KEY);
-            
+            returnListOfCompanies = (List<String>) companyList;
             for (Object object : companyList) {
                 System.out.println((String) object);
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
+        return returnListOfCompanies;
     }
 }

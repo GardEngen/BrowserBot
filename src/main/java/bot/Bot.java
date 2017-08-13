@@ -52,7 +52,7 @@ public class Bot {
     }
 
     private void selectCompanyAccount(String company){
-        botAction.sleepBot(6000);
+        botAction.sleepBot(1000);
         button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='ØKONOVA AS']"));
         botAction.sleepBot(1000);
         button.click();
@@ -63,5 +63,16 @@ public class Bot {
         botAction.sleepBot(2000);
         button = webDriver.findElement(By.xpath("//*[contains(text(), '"+company+"')]"));
         button.click();
+    }
+
+    private void handleIncoming(){
+        webDriver.navigate().to("https://app.24sevenoffice.com/script/economy/bank/incoming/");
+        //Bokfør
+
+
+
+        //Ubehandlet
+
+
     }
 }

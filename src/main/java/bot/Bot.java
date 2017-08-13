@@ -1,6 +1,5 @@
 package bot;
 
-import com.thoughtworks.selenium.SeleniumException;
 import config.Config;
 import config.SystemInfo;
 import org.openqa.selenium.By;
@@ -8,8 +7,17 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.quartz.*;
+
+import static org.quartz.JobBuilder.*;
 
 import java.util.ArrayList;
+
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.impl.StdSchedulerFactory;
+import static org.quartz.TriggerBuilder.*;
+import static org.quartz.SimpleScheduleBuilder.*;
 
 public class Bot {
     private WebDriver webDriver;
@@ -18,10 +26,12 @@ public class Bot {
     private BotAction botAction;
     private WebElement form;
     private WebElement button;
+    private Scheduler scheduler;
 
     public Bot() {
         this.config = new Config();
         this.storage = new Storage();
+        initQuartzScheduler();
     }
 
     public void startBot(int type) {
@@ -40,9 +50,47 @@ public class Bot {
 //                loginBot();
 //                selectCompanyAccount("BagID AS",true);
                 break;
+            case 2:
+                System.out.println("jeg er i case 2");
+                startBotOnSpezTime();
+
+                break;
 
             default:
 
+        }
+    }
+
+    private void initQuartzScheduler(){
+        try {
+            this.scheduler = StdSchedulerFactory.getDefaultScheduler();
+            // and start it off
+            scheduler.start();
+        } catch (SchedulerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startBotOnSpezTime(){
+        // define the job and tie it to our HelloJob class
+        JobDetail job = newJob(StartBot.class)
+                .withIdentity("job1", "group1")
+                .build();
+
+// Trigger the job to run now, and then repeat every 40 seconds
+        Trigger trigger = newTrigger()
+                .withIdentity("trigger1", "group1")
+                .startNow()
+                .withSchedule(simpleSchedule()
+                        .withIntervalInSeconds(5)
+                        .repeatForever())
+                .build();
+
+// Tell quartz to schedule the job using our trigger
+        try {
+            scheduler.scheduleJob(job, trigger);
+        } catch (SchedulerException e) {
+            e.printStackTrace();
         }
     }
 
@@ -61,6 +109,7 @@ public class Bot {
                 selectCompanyAccount(company, false);
             } catch (NoSuchElementException e){
                 listIsValid = false;
+                //display error to user
                 System.out.println("company not valid");
                 return;
             }
@@ -105,4 +154,12 @@ public class Bot {
             button.click();
         }
     }
+
+    private class StartBot implements org.quartz.Job{
+        @Override
+        public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+            System.out.println("JEG STARTER QUARTSSSSS");
+        }
+    }
+
 }

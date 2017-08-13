@@ -5,9 +5,12 @@ import config.SystemInfo;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.ArrayList;
+
 public class Bot {
     private WebDriver webDriver;
     private Config config;
+    private Storage storage;
     private BotAction botAction;
     private WebElement form;
     private WebElement button;
@@ -15,18 +18,31 @@ public class Bot {
 
     public Bot() {
         this.config = new Config();
+        this.storage = new Storage();
     }
 
     public void startBot(int type) {
         switch (type) {
             case 0:
+
+                ArrayList<String> listOfCompanies = new ArrayList<String>() {{
+                    add("BagID");
+                    add("Lingua");
+                    add("Puro");
+                }};
+
+                storage.storeCompanies(listOfCompanies);
+
+
+
+
                 break;
             case 1:
                 setupWebDriver();
                 this.botAction = new BotAction(webDriver);
                 webDriver.get("https://app.24sevenoffice.com/login/");
-                loginBot();
-                selectCompanyAccount("BagID AS");
+//                loginBot();
+//                selectCompanyAccount("BagID AS");
                 break;
 
             default:
@@ -38,6 +54,10 @@ public class Bot {
     private void setupWebDriver() {
         SystemInfo.setChromeDriverPhat();
         this.webDriver = new ChromeDriver();
+    }
+
+    private void goToDashborad(){
+        webDriver.navigate().to("https://app.24sevenoffice.com/scriptaspx/dashboard/");
     }
 
     private void loginBot(){

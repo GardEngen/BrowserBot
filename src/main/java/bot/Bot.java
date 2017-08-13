@@ -31,7 +31,8 @@ public class Bot {
                     add("Puro");
                 }};
 
-                storage.storeCompanies(listOfCompanies);
+                //storage.storeCompanies(listOfCompanies);
+                storage.getStoredCompanies();
 
 
 

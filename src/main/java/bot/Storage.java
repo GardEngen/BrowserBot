@@ -3,7 +3,9 @@ package bot;
 import config.SystemInfo;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
@@ -12,14 +14,16 @@ import java.util.List;
  * Created by Gard on 13.08.2017.
  */
 public class Storage {
+    private static final String COMPANY_LIST_KEY = "Company List";
+
     public Storage() {
     }
 
-    public void storeCompanies(List companies){
+    public void storeCompanies(List companies) {
         JSONObject obj = new JSONObject();
-        JSONArray companiesJSON = new JSONArray();
-        companiesJSON.addAll(companies);
-        obj.put("Company List", companiesJSON);
+        JSONArray companyList = new JSONArray();
+        companyList.addAll(companies);
+        obj.put(COMPANY_LIST_KEY, companyList);
 
         // try-with-resources statement based on post comment below :)
         try (FileWriter file = new FileWriter(SystemInfo.STORAGE_PATH)) {
@@ -29,6 +33,24 @@ public class Storage {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void getStoredCompanies() {
+        JSONParser parser = new JSONParser();
+
+        try {
+
+            Object obj = parser.parse(new FileReader(SystemInfo.STORAGE_PATH));
+
+            JSONObject jsonObject = (JSONObject) obj;
+            JSONArray companyList = (JSONArray) jsonObject.get(COMPANY_LIST_KEY);
+            
+            for (Object object : companyList) {
+                System.out.println((String) object);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

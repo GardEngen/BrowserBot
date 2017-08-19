@@ -2,18 +2,13 @@ package bot;
 
 import config.Config;
 import config.SystemInfo;
-import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.quartz.*;
+import org.quartz.impl.StdSchedulerFactory;
 
 import java.util.ArrayList;
-
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.impl.StdSchedulerFactory;
+import java.util.List;
 
 public class Bot {
     private WebDriver webDriver;
@@ -22,9 +17,10 @@ public class Bot {
     private BotAction botAction;
     private WebElement form;
     private WebElement button;
+    private List<WebElement> webElementList;
     private Scheduler scheduler;
 
-    public Bot(){
+    public Bot() {
         this.config = new Config();
         this.storage = new Storage();
     }
@@ -35,15 +31,18 @@ public class Bot {
                 setupWebDriver();
                 this.botAction = new BotAction(webDriver);
                 webDriver.get("https://app.24sevenoffice.com/login/");
-                storeNewCompaniesList();
-
+                //storeNewCompaniesList();
+                botAction.handleUntreatedInfoFile("BagID");
                 break;
             case 1:
                 setupWebDriver();
                 this.botAction = new BotAction(webDriver);
                 webDriver.get("https://app.24sevenoffice.com/login/");
-//                loginBot();
-//                selectCompanyAccount("BagID AS",true);
+                loginBot();
+                selectCompanyAccount("Hovl", true);
+                navigateToIncoming();
+                doPost();
+                doUntreated("bagId");
                 break;
             case 2:
                 System.out.println("jeg er i case 2");
@@ -55,7 +54,56 @@ public class Bot {
         }
     }
 
-    private void initQuartzScheduler() throws Exception{
+    private void navigateToIncoming() {
+        botAction.sleepBot(2000);
+        webDriver.navigate().to("https://app.24sevenoffice.com/script/economy/bank/incoming/");
+        webDriver.navigate().refresh();
+
+        botAction.sleepBot(9000);
+    }
+
+    private void doPost() {
+        try {
+            webElementList = webDriver.findElements(By.className("x-grid-group-collapsed"));
+            for (int i = 0; i < webElementList.size(); i++) {
+                webElementList.get(i).click();
+                botAction.sleepBot(2000);
+            }
+
+            webElementList = webDriver.findElements(By.className("x-grid-group-body"));
+            if (webElementList.isEmpty()) {
+                System.out.println("There is nothing to do here");
+                return;
+            }
+            for (int i = 0; i < webElementList.size(); i++) {
+
+                webElementList.get(i).click();
+                botAction.sleepBot(2000);
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println(e);
+        } catch (StaleElementReferenceException e) {
+            System.out.println("element is not attached to the page document");
+        }
+
+    }
+
+    private void doUntreated(String company) {
+        botAction.sleepBot(2000);
+        button = webDriver.findElement(By.id("ext-comp-1011__tabpane-unknown"));
+        button.click();
+
+        webElementList = webDriver.findElements(By.className("x-grid-group-body"));
+        if (webElementList.isEmpty()) {
+            System.out.println("There is nothing to do here");
+            return;
+        } else {
+            botAction.handleUntreatedInfoFile(company);
+        }
+
+    }
+
+    private void initQuartzScheduler() throws Exception {
         JobDetail job = JobBuilder.newJob(ScheduledBotJob.class)//mention the Job Class Name here
                 .build();
 
@@ -79,7 +127,7 @@ public class Bot {
 
     }
 
-    public void stopScheduleJob(){
+    public void stopScheduleJob() {
         try {
             scheduler.standby();
         } catch (SchedulerException e) {
@@ -96,11 +144,11 @@ public class Bot {
         boolean listIsValid = true;
         //check that the companies are valid.
         loginBot();
-        for(String company : listOfCompanies){
+        for (String company : listOfCompanies) {
             System.out.println("check if company '" + company + "' is valid");
             try {
                 selectCompanyAccount(company, false);
-            } catch (NoSuchElementException e){
+            } catch (NoSuchElementException e) {
                 listIsValid = false;
                 //display error to user
                 System.out.println("company not valid");
@@ -129,7 +177,7 @@ public class Bot {
         form.sendKeys(config.getValue("password"));
         button = webDriver.findElement(By.id("btnLogin"));
         button.click();
-        botAction.sleepBot(6000);
+        botAction.sleepBot(9000);
 
     }
 

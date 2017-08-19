@@ -11,9 +11,7 @@ import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-
+import java.io.*;
 
 public class BotAction {
     private WebDriver webDriver;
@@ -23,14 +21,13 @@ public class BotAction {
         this.webDriver = webDriver;
     }
 
-    public void sleepBot(int time){
+    public void sleepBot(int time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
-
 
     public void takeScreenshot() {
 
@@ -56,8 +53,8 @@ public class BotAction {
             //System.out.println("created dir: + " + SystemInfo.PROJECT_PATH + getCurrentDate());
 
             try {
-                FileUtils.copyFile(scrFile, new File(SystemInfo.SCREENSHOT_PATH  + getCurrentDate() + File.separator + getCurrentTime() + ".png"));
-                System.out.println("fil lagres;:" + SystemInfo.SCREENSHOT_PATH  + getCurrentDate() + File.separator + getCurrentTime() + ".png");
+                FileUtils.copyFile(scrFile, new File(SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + getCurrentTime() + ".png"));
+                System.out.println("fil lagres;:" + SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + getCurrentTime() + ".png");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -65,9 +62,19 @@ public class BotAction {
         }
     }
 
+    public void handleUntreatedInfoFile(String company) {
+        try (FileWriter fw = new FileWriter(SystemInfo.UNTREATED_PATH + getCurrentDate() + ".txt", true);
+             BufferedWriter bw = new BufferedWriter(fw);
+             PrintWriter out = new PrintWriter(bw)) {
+            out.println("Det ligger ubehandla innbetalinger på selskap: "+ company);
+            out.println(" ");
+        } catch (IOException e) {
+        }
+    }
+
     public void openScreenshotFolder() {
         try {
-            Desktop.getDesktop().open(new File(SystemInfo.SCREENSHOT_PATH ));
+            Desktop.getDesktop().open(new File(SystemInfo.SCREENSHOT_PATH));
         } catch (IOException e) {
             e.printStackTrace();
         }

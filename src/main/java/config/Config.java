@@ -1,9 +1,6 @@
 package config;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
 
 /**
@@ -27,6 +24,15 @@ public class Config {
     }
     public String getValue(String key){
         return prop.getProperty(key);
+    }
+
+    public void writeToProp(String key, String value){
+        prop.setProperty(key,value);
+        try {
+            prop.store(new FileOutputStream("config.properties"), null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

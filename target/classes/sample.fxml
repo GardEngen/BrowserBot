@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<!--<AnchorPane id="AnchorPane" prefHeight="200" prefWidth="320" xmlns:fx="http://javafx.com/fcml/1" fx:controller="ui.Controller">-->
+<!--<children>-->
+<!--&lt;!&ndash;<Button layoutX="126" layoutY="90" text="Click Me!" onAction="#handleButtonActon" fx:id="button" />&ndash;&gt;-->
+<!--</children>-->
+<!--</AnchorPane>-->
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <children>
+      <Pane id="rootPane" fx:id="dashboardPane" layoutX="47.0" layoutY="13.0" prefHeight="374.0" prefWidth="506.0" style="-fx-background-color: #ffffff;">
+         <children>
+            <Label layoutX="185.0" layoutY="14.0" text="Bot dashboard">
+               <font>
+                  <Font name="Apple SD GothicNeo ExtraBold" size="21.0" />
+               </font>
+            </Label>
+            <JFXComboBox fx:id="listOfCompanies" focusColor="#00bcd4" layoutX="232.0" layoutY="160.0" prefHeight="27.0" prefWidth="179.0" promptText="Liste over firma" unFocusColor="#00bcd4" />
+            <DatePicker layoutX="34.0" layoutY="96.0" style="-fx-background-color: #00BCD4;" />
+            <JFXButton fx:id="testRunBot" layoutX="203.0" layoutY="304.0" onAction="#testRunAction" text="Prøvekjør bot" />
+            <JFXToggleButton fx:id="runBotOnTime" layoutX="280.0" layoutY="81.0" onAction="#runBotOnTimeAction" text="Start bot på tid" />
+            <JFXTextField fx:id="newCompeny" labelFloat="true" layoutX="34.0" layoutY="161.0" promptText="Firma som skal legges til" />
+            <JFXButton fx:id="screenshot" layoutX="48.0" layoutY="304.0" onAction="#goToScreenshotAction" text="Gå til screenshot" />
+            <JFXButton fx:id="untreated" layoutX="48.0" layoutY="272.0" onAction="#goToUntreatedAction" text="Gå til ubehandlet" />
+            <JFXButton fx:id="addcompany" layoutX="34.0" layoutY="200.0" onAction="#addcompanyAction" text="Legg til " />
+            <JFXButton fx:id="removeCompany" layoutX="419.0" layoutY="160.0" onAction="#removeCompanyAction" text="Fjern" />
+         </children>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" />
+         </effect>
+      </Pane>
+      <Pane id="rootPane" fx:id="rootPane" layoutX="47.0" layoutY="13.0" prefHeight="374.0" prefWidth="506.0" style="-fx-background-color: #ffffff;">
+         <children>
+            <JFXTextField fx:id="username" focusColor="#00bcd4" labelFloat="true" layoutX="178.0" layoutY="151.0" promptText="Brukernavn" unFocusColor="#00bcd4" />
+            <JFXTextField fx:id="password" focusColor="#00bcd4" labelFloat="true" layoutX="178.0" layoutY="210.0" promptText="Passord" unFocusColor="#00bcd4" />
+            <Label layoutX="34.0" layoutY="81.0" text="Skriv inn 24sevenoffice brukernavn og passord">
+               <font>
+                  <Font name="Apple SD GothicNeo ExtraBold" size="21.0" />
+               </font>
+            </Label>
+            <JFXButton fx:id="login" layoutX="211.0" layoutY="267.0" onAction="#loginAction" prefHeight="27.0" prefWidth="84.0" style="-fx-background-color: #00BCD4;" text="Login" textAlignment="CENTER" textFill="#e0f7fa" />
+         </children>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" />
+         </effect>
+      </Pane>
+   </children>
+</AnchorPane>

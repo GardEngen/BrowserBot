@@ -29,8 +29,8 @@ public class BotAction {
         }
     }
 
-    public void takeScreenshot() {
-
+    public void takeScreenshot(String company) {
+        sleepBot(200);
         //Takes screenshot
         File scrFile = ((TakesScreenshot) webDriver).getScreenshotAs(OutputType.FILE);
         System.out.println("Takes screenshot");
@@ -40,8 +40,8 @@ public class BotAction {
             //Stores file
             System.out.println("directory finness");
             try {
-                FileUtils.copyFile(scrFile, new File(SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + getCurrentTime() + ".png"));
-                System.out.println("fil lagres;:" + SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + getCurrentTime() + ".png");
+                FileUtils.copyFile(scrFile, new File(SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + company +"-"+ getCurrentTime() + ".png"));
+                System.out.println("fil lagres;:" + SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + company +"-"+ getCurrentTime() + ".png");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -53,8 +53,8 @@ public class BotAction {
             //System.out.println("created dir: + " + SystemInfo.PROJECT_PATH + getCurrentDate());
 
             try {
-                FileUtils.copyFile(scrFile, new File(SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + getCurrentTime() + ".png"));
-                System.out.println("fil lagres;:" + SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + getCurrentTime() + ".png");
+                FileUtils.copyFile(scrFile, new File(SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + company +"-"+ getCurrentTime() + ".png"));
+                System.out.println("fil lagres;:" + SystemInfo.SCREENSHOT_PATH + getCurrentDate() + File.separator + company +"-"+ getCurrentTime() + ".png");
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -69,14 +69,6 @@ public class BotAction {
             out.println("Det ligger ubehandla innbetalinger på selskap: "+ company);
             out.println(" ");
         } catch (IOException e) {
-        }
-    }
-
-    public void openScreenshotFolder() {
-        try {
-            Desktop.getDesktop().open(new File(SystemInfo.SCREENSHOT_PATH));
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

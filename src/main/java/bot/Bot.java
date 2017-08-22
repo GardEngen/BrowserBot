@@ -18,11 +18,13 @@ public class Bot {
     private WebElement form;
     private WebElement button;
     private List<WebElement> webElementList;
+    private List<String> storedCompanies;
     private Scheduler scheduler;
 
     public Bot() {
         this.config = new Config();
         this.storage = new Storage();
+        this.storedCompanies = storage.getStoredCompanies();
     }
 
     public void startBot(int type) {
@@ -39,7 +41,7 @@ public class Bot {
                 this.botAction = new BotAction(webDriver);
                 webDriver.get("https://app.24sevenoffice.com/login/");
                 loginBot();
-                selectCompanyAccount("Hovl", true);
+                //selectCompanyAccount("Hovl", true);
                 navigateToIncoming();
                 doPost();
                 doUntreated("bagId");
@@ -54,12 +56,37 @@ public class Bot {
         }
     }
 
+
+    public void startBot(){
+        setupWebDriver();
+        this.botAction = new BotAction(webDriver);
+        webDriver.get("https://app.24sevenoffice.com/login/");
+        loginBot();
+
+        for (int i = 0; i < storedCompanies.size(); i++) {
+            if(i > 0) {
+                selectCompanyAccount(storedCompanies.get(i), true, storedCompanies.get(i-1));
+            } else {
+                selectCompanyAccount(storedCompanies.get(i), true,storedCompanies.get(i));
+            }
+            navigateToIncoming();
+            doPost();
+            botAction.takeScreenshot(storedCompanies.get(i));
+            doUntreated(storedCompanies.get(i));
+            goToDashborad();
+        }
+        botAction.quitBot();
+    }
+//    private String getLastCompany(){
+//
+//
+//    }
     private void navigateToIncoming() {
         botAction.sleepBot(2000);
         webDriver.navigate().to("https://app.24sevenoffice.com/script/economy/bank/incoming/");
         webDriver.navigate().refresh();
 
-        botAction.sleepBot(9000);
+        botAction.sleepBot(2000);
     }
 
     private void doPost() {
@@ -92,7 +119,7 @@ public class Bot {
         botAction.sleepBot(2000);
         button = webDriver.findElement(By.id("ext-comp-1011__tabpane-unknown"));
         button.click();
-
+        botAction.sleepBot(2000);
         webElementList = webDriver.findElements(By.className("x-grid-group-body"));
         if (webElementList.isEmpty()) {
             System.out.println("There is nothing to do here");
@@ -147,7 +174,7 @@ public class Bot {
         for (String company : listOfCompanies) {
             System.out.println("check if company '" + company + "' is valid");
             try {
-                selectCompanyAccount(company, false);
+                selectCompanyAccount(company, false,company);
             } catch (NoSuchElementException e) {
                 listIsValid = false;
                 //display error to user
@@ -167,6 +194,8 @@ public class Bot {
 
     private void goToDashborad() {
         webDriver.navigate().to("https://app.24sevenoffice.com/scriptaspx/dashboard/");
+        webDriver.navigate().refresh();
+        botAction.sleepBot(1500);
     }
 
     private void loginBot() {
@@ -181,15 +210,18 @@ public class Bot {
 
     }
 
-    private void selectCompanyAccount(String company, boolean enterCompanyInterface) {
-        button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='ØKONOVA AS']"));
-        botAction.sleepBot(1000);
+    private void selectCompanyAccount(String company, boolean enterCompanyInterface, String lastCompany) {
+        try {
+            button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='ØKONOVA AS']"));
+        } catch (NoSuchElementException e){
+            button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='"+lastCompany+"']"));
+        }
         button.click();
-        botAction.sleepBot(2000);
-        form = webDriver.findElement(By.id("textfield-1064-inputEl"));
-        botAction.sleepBot(1000);
+        botAction.sleepBot(500);
+        form = webDriver.findElement(By.xpath("//input[@placeholder='Finn firmakonto']"));
+        botAction.sleepBot(500);
         form.sendKeys(company);
-        botAction.sleepBot(2000);
+        botAction.sleepBot(500);
         button = webDriver.findElement(By.xpath("//*[contains(text(), '" + company + "')]"));
         if (enterCompanyInterface) {
             button.click();

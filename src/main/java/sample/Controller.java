@@ -5,14 +5,9 @@ import bot.Storage;
 import com.jfoenix.controls.*;
 import config.Config;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Gard on 21.08.2017.
@@ -55,7 +50,7 @@ public class Controller {
     private JFXTextField username;
 
     @FXML
-    private JFXTextField password;
+    private JFXPasswordField password;
 
     @FXML
     private JFXButton login;
@@ -81,17 +76,20 @@ public class Controller {
 
     @FXML
     void goToScreenshotAction(ActionEvent event) {
-
+        storage.openScreenshotFolder();
     }
 
     @FXML
     void goToUntreatedAction(ActionEvent event) {
-
+        storage.openUntreatedFolder();
     }
 
     @FXML
     void removeCompanyAction(ActionEvent event) {
-
+        String company = listOfCompanies.getValue();
+        if(company != null){
+            storage.removeStoredCompany(company);
+        }
     }
 
     @FXML
@@ -101,34 +99,28 @@ public class Controller {
 
     @FXML
     void testRunAction(ActionEvent event) {
-        bot.startBot(1);
+        bot.startBot();
     }
 
-
-
-
-
-
-
     @FXML
-        void loginAction(ActionEvent event) {
-            if(username.getText().isEmpty() || password.getText().isEmpty()){
-                //do nothing
-            }else {
-                Config config = new Config();
-                config.writeToProp("username2",username.getText());
-                config.writeToProp("password2",password.getText());
-                //navigate to panel
-                showDashboard();
-            }
-
+    void loginAction(ActionEvent event) {
+        if (username.getText().isEmpty() || password.getText().isEmpty()) {
+            //do nothing
+        } else {
+            Config config = new Config();
+            config.writeToProp("username2", username.getText());
+            config.writeToProp("password2", password.getText());
+            //navigate to panel
+            showDashboard();
         }
+
+    }
 
     private void showDashboard() {
 
         System.out.println("switch");
         rootPane.setVisible(false);
-       // rootPane.setDisable(true);
+        // rootPane.setDisable(true);
         dashboardPane.setVisible(true);
     }
 }

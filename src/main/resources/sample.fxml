@@ -2,6 +2,7 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXPasswordField?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXToggleButton?>
 <?import javafx.scene.control.DatePicker?>
@@ -43,13 +44,13 @@
       <Pane id="rootPane" fx:id="rootPane" layoutX="47.0" layoutY="13.0" prefHeight="374.0" prefWidth="506.0" style="-fx-background-color: #ffffff;">
          <children>
             <JFXTextField fx:id="username" focusColor="#00bcd4" labelFloat="true" layoutX="178.0" layoutY="151.0" promptText="Brukernavn" unFocusColor="#00bcd4" />
-            <JFXTextField fx:id="password" focusColor="#00bcd4" labelFloat="true" layoutX="178.0" layoutY="210.0" promptText="Passord" unFocusColor="#00bcd4" />
             <Label layoutX="34.0" layoutY="81.0" text="Skriv inn 24sevenoffice brukernavn og passord">
                <font>
                   <Font name="Apple SD GothicNeo ExtraBold" size="21.0" />
                </font>
             </Label>
             <JFXButton fx:id="login" layoutX="211.0" layoutY="267.0" onAction="#loginAction" prefHeight="27.0" prefWidth="84.0" style="-fx-background-color: #00BCD4;" text="Login" textAlignment="CENTER" textFill="#e0f7fa" />
+            <JFXPasswordField fx:id="password" focusColor="#00bcd4" labelFloat="true" layoutX="178.0" layoutY="198.0" promptText="Passord" unFocusColor="#00bcd4" />
          </children>
          <effect>
             <DropShadow blurType="ONE_PASS_BOX" />

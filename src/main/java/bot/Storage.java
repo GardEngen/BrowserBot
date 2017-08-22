@@ -5,6 +5,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.awt.*;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -33,6 +35,27 @@ public class Storage {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void openScreenshotFolder() {
+        try {
+            Desktop.getDesktop().open(new File(SystemInfo.SCREENSHOT_PATH));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openUntreatedFolder() {
+        try {
+            Desktop.getDesktop().open(new File(SystemInfo.UNTREATED_PATH));
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void removeStoredCompany(String company){
+
     }
 
     public List<String> getStoredCompanies() {

@@ -71,7 +71,12 @@ public class Controller {
 
     @FXML
     void addcompanyAction(ActionEvent event) {
-
+        if (!newCompeny.getText().isEmpty()) {
+            if (bot.storeNewCompany(newCompeny.getText())) {
+                getStoredCompanies();
+            }
+        }
+        newCompeny.setText("");
     }
 
     @FXML
@@ -87,8 +92,9 @@ public class Controller {
     @FXML
     void removeCompanyAction(ActionEvent event) {
         String company = listOfCompanies.getValue();
-        if(company != null){
+        if (company != null) {
             storage.removeStoredCompany(company);
+            getStoredCompanies();
         }
     }
 

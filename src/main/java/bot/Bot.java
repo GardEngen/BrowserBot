@@ -7,7 +7,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Bot {
@@ -27,47 +26,48 @@ public class Bot {
         this.storedCompanies = storage.getStoredCompanies();
     }
 
-    public void startBot(int type) {
-        switch (type) {
-            case 0:
-                setupWebDriver();
-                this.botAction = new BotAction(webDriver);
-                webDriver.get("https://app.24sevenoffice.com/login/");
-                //storeNewCompaniesList();
-                botAction.handleUntreatedInfoFile("BagID");
-                break;
-            case 1:
-                setupWebDriver();
-                this.botAction = new BotAction(webDriver);
-                webDriver.get("https://app.24sevenoffice.com/login/");
-                loginBot();
-                //selectCompanyAccount("Hovl", true);
-                navigateToIncoming();
-                doPost();
-                doUntreated("bagId");
-                break;
-            case 2:
-                System.out.println("jeg er i case 2");
+//    public void startBot(int type) {
+//        switch (type) {
+//            case 0:
+//                this.botAction = new BotAction(webDriver);
+//                webDriver.get("https://app.24sevenoffice.com/login/");
+//                //storeNewCompaniesList();
+//                botAction.handleUntreatedInfoFile("BagID");
+//                break;
+//            case 1:
+//                webDriver.get("https://app.24sevenoffice.com/login/");
+//                loginBot();
+//                //selectCompanyAccount("Hovl", true);
+//                navigateToIncoming();
+//                doPost();
+//                doUntreated("bagId");
+//                break;
+//            case 2:
+//                System.out.println("jeg er i case 2");
+//
+//                break;
+//
+//            default:
+//
+//        }
+//    }
 
-                break;
-
-            default:
-
-        }
-    }
-
-
-    public void startBot(){
-        setupWebDriver();
+    private void setUpBot() {
+        SystemInfo.setChromeDriverPhat();
+        this.webDriver = new ChromeDriver();
         this.botAction = new BotAction(webDriver);
         webDriver.get("https://app.24sevenoffice.com/login/");
+    }
+
+    public void startBot() {
+        setUpBot();
         loginBot();
 
         for (int i = 0; i < storedCompanies.size(); i++) {
-            if(i > 0) {
-                selectCompanyAccount(storedCompanies.get(i), true, storedCompanies.get(i-1));
+            if (i > 0) {
+                selectCompanyAccount(storedCompanies.get(i), true, storedCompanies.get(i - 1));
             } else {
-                selectCompanyAccount(storedCompanies.get(i), true,storedCompanies.get(i));
+                selectCompanyAccount(storedCompanies.get(i), true, storedCompanies.get(i));
             }
             navigateToIncoming();
             doPost();
@@ -77,7 +77,8 @@ public class Bot {
         }
         botAction.quitBot();
     }
-//    private String getLastCompany(){
+
+    //    private String getLastCompany(){
 //
 //
 //    }
@@ -162,34 +163,25 @@ public class Bot {
         }
     }
 
-    private void storeNewCompaniesList() {
-        ArrayList<String> listOfCompanies = new ArrayList<String>() {{
-            add("FEEEEEIIILL");
-//            add("Lingua");
-//            add("Puro");
-        }};
-        boolean listIsValid = true;
+    public boolean storeNewCompany(String company) {
+        boolean companyIsValid = true;
         //check that the companies are valid.
+        setUpBot();
         loginBot();
-        for (String company : listOfCompanies) {
-            System.out.println("check if company '" + company + "' is valid");
-            try {
-                selectCompanyAccount(company, false,company);
-            } catch (NoSuchElementException e) {
-                listIsValid = false;
-                //display error to user
-                System.out.println("company not valid");
-                return;
-            }
+        System.out.println("check if company '" + company + "' is valid");
+        try {
+            selectCompanyAccount(company, true, company);
+        } catch (NoSuchElementException e) {
+            companyIsValid = false;
+            botAction.quitBot();
+            //display error to user
+            System.out.println("company not valid");
         }
-        if (listOfCompanies != null || listIsValid) {
-            storage.storeCompanies(listOfCompanies);
+        if (!company.isEmpty() && companyIsValid) {
+            storage.storeCompany(company);
+            botAction.quitBot();
         }
-    }
-
-    private void setupWebDriver() {
-        SystemInfo.setChromeDriverPhat();
-        this.webDriver = new ChromeDriver();
+        return companyIsValid;
     }
 
     private void goToDashborad() {
@@ -213,8 +205,8 @@ public class Bot {
     private void selectCompanyAccount(String company, boolean enterCompanyInterface, String lastCompany) {
         try {
             button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='ØKONOVA AS']"));
-        } catch (NoSuchElementException e){
-            button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='"+lastCompany+"']"));
+        } catch (NoSuchElementException e) {
+            button = webDriver.findElement(By.xpath("//div[contains(@class, 'map-name') and text()='" + lastCompany + "']"));
         }
         button.click();
         botAction.sleepBot(500);

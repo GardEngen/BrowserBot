@@ -21,20 +21,13 @@ public class Storage {
     public Storage() {
     }
 
-    public void storeCompanies(List companies) {
+    public void storeCompany(String company) {
         JSONObject obj = new JSONObject();
-        JSONArray companyList = new JSONArray();
-        companyList.addAll(companies);
-        obj.put(COMPANY_LIST_KEY, companyList);
-
-        // try-with-resources statement based on post comment below :)
-        try (FileWriter file = new FileWriter(SystemInfo.STORAGE_PATH)) {
-            file.write(obj.toJSONString());
-            System.out.println("Successfully Copied JSON Object to File...");
-            System.out.println("\nJSON Object: " + obj);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<String> storedList = getStoredCompanies();
+        System.out.println("list:" + storedList);
+        storedList.add(company);
+        obj.put(COMPANY_LIST_KEY, storedList);
+        writeToFile(obj);
     }
 
 
@@ -55,7 +48,28 @@ public class Storage {
     }
 
     public void removeStoredCompany(String company){
+        List<String> storedList = getStoredCompanies();
+        JSONObject obj = new JSONObject();
+        if(storedList.contains(company)){
+            storedList.remove(company);
+            System.out.println("new stored list: "+ storedList);
 
+            obj.put(COMPANY_LIST_KEY, storedList);
+            writeToFile(obj);
+        }else {
+            System.out.println("Firma finnes ikke");
+        }
+    }
+
+    private void writeToFile(JSONObject obj){
+        // try-with-resources statement based on post comment below :)
+        try (FileWriter file = new FileWriter(SystemInfo.STORAGE_PATH)) {
+            file.write(obj.toJSONString());
+            System.out.println("Successfully Copied JSON Object to File...");
+            System.out.println("\nJSON Object: " + obj);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<String> getStoredCompanies() {
